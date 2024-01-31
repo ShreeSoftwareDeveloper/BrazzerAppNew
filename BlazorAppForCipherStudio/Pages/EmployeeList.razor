@@ -1,0 +1,110 @@
+﻿@page "/Employees"
+@using BlazorAppForCipherStudio.Data.Entity;
+@using BlazorAppForCipherStudio.Data.Service;
+@inject EmployeeService employeeService;
+@*<NavLink class="nav-lik" href="AddNewEmployee">
+    <span class="oi oi-plus" arial-hidden="true">Add Employee</span>
+</NavLink>*@
+<a class="btn btn-primary" href="AddNewEmployee"> Add Employee</a> 
+<h3 class="mt-2">EmployeeList</h3>
+<div class="float-end mt-2">
+<input type="text" @bind="searchQuery" placeholder="Search by name" @oninput="Search" />
+</div>
+
+@if(EmpObj is null)
+{
+    <p align="center">
+    <img src="https://i.pinimg.com/originals/c7/e1/b7/c7e1b7b5753737039e1bdbda578132b8.gif" width="30%" height="30%"/>
+    </p>
+}
+
+else
+{
+    <table class="table table-striped mt-2">
+        <thead>
+            <tr>
+                <th>
+                    Employee No.
+                </th>
+                 <th>
+                    Employee Name
+                </th>
+                 <th>
+                   Email
+                </th>
+                 <th>
+                    Phone Number
+                </th>
+            <th>
+                Address
+            </th>
+            <th>
+                Designation
+            </th>
+                <th>
+                    Edit
+                </th>
+                <th>
+                    Delete
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var emp in EmpObj.Where(e => string.IsNullOrEmpty(searchQuery) || e.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)))
+            {
+                <tr>
+                    <td>
+                        @emp.Id
+                    </td>
+                    <td>
+                        @emp.Name
+                    </td>
+                    <td>
+                        @emp.Email
+                    </td>
+                    <td>
+                        @emp.Mobile
+
+                    </td>
+                    <td>
+                        @emp.Address
+
+                    </td>
+                    <td>
+                        @emp.Designation
+
+                    </td>
+                    <td>
+                        <a class="nav-link btn btn-primary" href="EditEmployee/@emp.Id">
+                            <span class="oi oi-pencil">Edit</span>
+                        </a>
+                    </td>
+                    <td>
+                        <a class="nav-link btn btn-danger" href="DeleteEmployee/@emp.Id">
+                            <span class="oi oi-trash btn-danger">Delete</span>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @if (EmpObj.Count > 0 && EmpObj.All(e => !e.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)))
+    {
+        <p align="center">No data found.</p>
+    }
+}
+@code {
+    List<Employee> EmpObj;
+    string searchQuery = "";
+
+
+    protected override async Task OnInitializedAsync()
+    {
+       EmpObj = await Task.Run(() => employeeService.GetEmployees());
+    }
+    void Search(ChangeEventArgs args)
+    {
+        searchQuery = args.Value.ToString();
+        StateHasChanged();
+    }
+}

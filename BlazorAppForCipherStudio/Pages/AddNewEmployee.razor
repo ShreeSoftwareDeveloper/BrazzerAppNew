@@ -1,0 +1,74 @@
+﻿@page "/AddNewEmployee"
+@using BlazorAppForCipherStudio.Data.Entity
+@using BlazorAppForCipherStudio.Data.Service
+@inject EmployeeService employeeService
+@inject NavigationManager navigationManger
+
+<h3>Employee Registration</h3>
+<hr/>
+<form>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="for-group">
+                <label for="Name" class="control-label">First Name</label>
+                <input form="FirstName" class="form-control" @bind="@obj.FirstName" />
+            </div>
+             <div class="for-group">
+                <label for="MiddleName" class="control-label">Middle Name</label>
+                <input form="MiddleName" class="form-control" @bind="@obj.MiddleName" />
+            </div>
+            <div class="for-group">
+                <label for="LastName" class="control-label">Last Name</label>
+                <input form="LastName" class="form-control" @bind="@obj.LastName" />
+            </div>
+            <div class="for-group">
+                <label for="Email" class="control-label">Email</label>
+                <input form="EmailAddress" class="form-control" @bind="@obj.Email" />
+            </div>
+            <div class="for-group">
+                <label for="Mobile" class="control-label">Mobile No.</label>
+                <input form="Mobile" class="form-control" @bind="@obj.Mobile" />
+            </div>
+            <div class="for-group">
+                <label for="PinCode" class="control-label">Pin Code</label>
+                <input form="PinCode" class="form-control" @bind="@obj.PinCode" />
+            </div>
+            <div class="for-group">
+                <label for="Address" class="control-label">Address</label>
+                <input form="Address" class="form-control" @bind="@obj.Address" />
+            </div>
+            <div class="for-group">
+                <label for="City" class="control-label">City</label>
+                <input form="City" class="form-control" @bind="@obj.City" />
+            </div>
+            <div class="for-group">
+                <label for="Designation" class="control-label">Designation</label>
+                <input form="Designation" class="form-control" @bind="@obj.Designation" />
+            </div>
+        </div>
+    </div><br />
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" class="btn btn-primary" @onclick="@CreateNewEmployee" value="Save" />
+                <input type="button" class="btn btn-danger" @onclick="@Cancel" value="Cancel" />
+            </div>
+        </div>
+
+    </div>
+</form>
+
+
+@code {
+    Employee obj = new Employee();
+    protected async void CreateNewEmployee()
+    {
+        await employeeService.AddEmployee(obj);
+        navigationManger.NavigateTo("Employees");
+        Console.WriteLine("Employee Addedd Sucessfully");
+    }
+    protected async void Cancel()
+    {
+        navigationManger.NavigateTo("Employees");
+    }
+}
